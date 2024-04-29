@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserGoogle;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -20,14 +28,11 @@ class UserController extends Controller
      */
     public function login(Request $request)
     {
-        $user = new UserGoogle;
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->email_verified = $request->input('email_verified');
+        $login = $request->only(['email', 'username', 'emailVerified', 'profileImage']);
 
-        if( $user->save()){
-            return $user;
-        }
+        $response = $this->userService->verifyGoogleLogin($login);
+
+        return response()->json($response['data'], $response['status']);
     }
 
     /**
