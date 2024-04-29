@@ -1,6 +1,8 @@
+import Chats from '../components/Chats/chats';
+
 function Home() {
   return (
-    <p>.</p>
+    <Chats />
   );
 }
 
